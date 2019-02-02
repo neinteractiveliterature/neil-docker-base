@@ -1,0 +1,25 @@
+ARG RUBY_VERSION=2.5.3
+
+FROM ruby:${RUBY_VERSION}-alpine as build
+
+RUN apk add \
+  --no-cache \
+  build-base git postgresql-dev cmake flex curl python tzdata less bash nodejs yarn
+
+RUN mkdir -p /tmp \
+  && cd /tmp \
+  && curl -sL https://github.com/graphql/libgraphqlparser/archive/v0.7.0.tar.gz >libgraphqlparser-0.7.0.tar.gz \
+  && tar xfz libgraphqlparser-0.7.0.tar.gz \
+  && cd /tmp/libgraphqlparser-0.7.0 \
+  && cmake . \
+  && make install \
+  && cd /tmp \
+  && rm -rf libgraphqlparser-0.7.0 libgraphqlparser-0.7.0.tar.gz
+
+RUN mkdir -p /usr/src/build \
+  && addgroup -S www \
+  && adduser -G www -S www \
+  && chown www:www /usr/src/build
+USER www
+
+WORKDIR /usr/src/build
