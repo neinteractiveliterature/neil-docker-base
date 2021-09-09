@@ -4,7 +4,7 @@ FROM ruby:${RUBY_VERSION}-alpine as build
 
 RUN apk add \
   --no-cache \
-  build-base git postgresql-dev curl tzdata less bash nodejs yarn openssl
+  build-base git postgresql-dev curl tzdata less bash nodejs openssl
 
 RUN mkdir -p /usr/src/build \
   && addgroup -S www \
